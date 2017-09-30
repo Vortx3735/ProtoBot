@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 import java.util.ArrayList;
 
+import org.usfirst.frc.team3735.robot.Hardware;
 import org.usfirst.frc.team3735.robot.Robot;
 import org.usfirst.frc.team3735.robot.util.settings.Setting;
 
@@ -27,7 +28,7 @@ public class MotorsOn extends Command {
 				System.out.println("This port value is invalid: " + ports[i]);
 				continue;
 			}
-			motors.add(new CANTalon(port));
+			motors.add(Hardware.getMotor(port));
 			motors.get(motors.size()-1).setInverted(((int)Math.signum(port) == 1) ? false : true);
 		}
 		if(sdbname == null) {
@@ -36,6 +37,7 @@ public class MotorsOn extends Command {
 			speed = new Setting(sdbname, spd);
 		}
 	}
+	
 
 	// Called just before this Command runs the first time
 	@Override
