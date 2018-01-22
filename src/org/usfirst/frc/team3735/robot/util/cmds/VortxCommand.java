@@ -20,7 +20,9 @@ public class VortxCommand extends Command{
 
 	ArrayList<ComTrigger> triggers = new ArrayList<ComTrigger>();
 	ArrayList<ComAssist> assists = new ArrayList<ComAssist>();
-	
+	private boolean DebugPrint = true;
+
+
 	@Override
 	protected void initialize() {
 		for(ComTrigger t : triggers){
@@ -36,6 +38,9 @@ public class VortxCommand extends Command{
 		for(ComAssist c : assists){
 			c.execute();
 		}
+		for(ComTrigger t : triggers){
+			t.execute();
+		}
 	}
 
 
@@ -44,13 +49,24 @@ public class VortxCommand extends Command{
 	protected boolean isFinished() {
 		for(ComTrigger t : triggers){
 			if(t.get()){
+				if(DebugPrint) {
+					System.out.println("Command " + this.getName() + " halted: " + t.getHaltMessage());
+				}
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	public VortxCommand addTrigger(ComTrigger t){
+	@Override
+	protected void end() {
+		for(ComAssist c : assists){
+			c.end();
+		}
+		
+	}
+	
+	public VortxCommand addT(ComTrigger t){
 		triggers.add(t);
 		for(Subsystem s : t.requirements){
 			requires(s);
@@ -58,7 +74,7 @@ public class VortxCommand extends Command{
 		return this;
 	}
 	
-	public VortxCommand addAssist(ComAssist c){
+	public VortxCommand addA(ComAssist c){
 		assists.add(c);
 		for(Subsystem s : c.requirements){
 			requires(s);

@@ -4,31 +4,31 @@ import edu.wpi.first.wpilibj.command.Command;
 
 import java.util.ArrayList;
 
-import org.usfirst.frc.team3735.robot.Hardware;
 import org.usfirst.frc.team3735.robot.Robot;
 import org.usfirst.frc.team3735.robot.util.settings.Setting;
 
-import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 
 /**
  *
  */
 public class MotorsOn extends Command {
-	ArrayList<CANTalon> motors;
+	ArrayList<WPI_TalonSRX> motors;
 	private Setting speed;
 	public MotorsOn(int[] ports, double spd) {
 		this(ports, spd, null);
 	}
 
 	public MotorsOn(int[] ports, double spd, String sdbname) {
-		motors = new ArrayList<CANTalon>();
+		motors = new ArrayList<WPI_TalonSRX>();
 		for(int i = 0; i < ports.length; i++) {
 			int port = Math.abs(ports[i]);
 			if(port < 1 || port > 16) {
 				System.out.println("This port value is invalid: " + ports[i]);
 				continue;
 			}
-			motors.add(Hardware.getMotor(port));
+			motors.add(new WPI_TalonSRX(port));
 			motors.get(motors.size()-1).setInverted(((int)Math.signum(port) == 1) ? false : true);
 		}
 		if(sdbname == null) {
@@ -37,7 +37,6 @@ public class MotorsOn extends Command {
 			speed = new Setting(sdbname, spd);
 		}
 	}
-	
 
 	// Called just before this Command runs the first time
 	@Override
@@ -48,7 +47,7 @@ public class MotorsOn extends Command {
 	@Override
 	protected void execute() {
 		speed.fetch();
-		for(CANTalon mtr : motors) {
+		for(WPI_TalonSRX mtr : motors) {
 			mtr.set(speed.getValue());
 		}
 	}
@@ -62,7 +61,7 @@ public class MotorsOn extends Command {
 	// Called once after isFinished returns true
 	@Override
 	protected void end() {
-		for(CANTalon mtr : motors) {
+		for(WPI_TalonSRX mtr : motors) {
 			mtr.set(0);
 		}
 	}

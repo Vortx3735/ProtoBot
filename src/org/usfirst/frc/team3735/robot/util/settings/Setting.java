@@ -4,13 +4,14 @@ import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Setting {
+public class Setting extends Func{
 	
 	private String name;
 	private double value;
 	
 	private boolean isReceiving;
 	private boolean isVisible;
+	private boolean isListening = false;
 	
 	private static ArrayList<Setting> settings = new ArrayList<Setting>();
 	private static int fIteration;
@@ -23,6 +24,12 @@ public class Setting {
 		isVisible = true;
 		isReceiving = true;
 		settings.add(this);
+	}
+	
+	//isListening is different from isReceiving because function onchange is called when a change is detected
+	public void setIsListening(boolean val) {
+		isListening = val;
+		
 	}
 
 	
@@ -43,7 +50,6 @@ public class Setting {
 		}
 		isReceiving = false;
 	}
-	
 
 	
 	public double getValue(){
@@ -57,7 +63,14 @@ public class Setting {
 	
 	public void fetch() {
 		if(isReceiving) {
-			value = SmartDashboard.getNumber(name, value);
+			if(isListening) {
+				if(value != SmartDashboard.getNumber(name, value)) {
+					value = SmartDashboard.getNumber(name, value);
+					valueChanged(value);
+				}
+			}else {
+				value = SmartDashboard.getNumber(name, value);
+			}
 		}
 	}
 	
@@ -89,6 +102,11 @@ public class Setting {
 			}
 			settings.get(fIteration).fetch();
 		}
+	}
+	
+	//Override me if you want!
+	public void valueChanged(double val) {
+		
 	}
 	
 }

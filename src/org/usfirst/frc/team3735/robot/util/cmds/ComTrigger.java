@@ -21,8 +21,16 @@ public abstract class ComTrigger {
 		
 	}
 	
+	public void execute() {
+		
+	}
+	
 	public void requires(Subsystem s){
 		requirements.add(s);
+	}
+	
+	public String getHaltMessage() {
+		return "";
 	}
 	
 }

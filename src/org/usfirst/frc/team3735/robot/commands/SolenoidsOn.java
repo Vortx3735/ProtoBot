@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.command.Command;
 
 import java.util.ArrayList;
 
-import org.usfirst.frc.team3735.robot.Hardware;
 import org.usfirst.frc.team3735.robot.Robot;
 import org.usfirst.frc.team3735.robot.util.settings.Setting;
 
@@ -25,7 +24,7 @@ public class SolenoidsOn extends Command {
 				System.out.println("This Solenoid port value is invalid: " + ports);
 				continue;
 			}
-			solenoids.add(Hardware.getSolenoid(port));
+			solenoids.add(new Solenoid(port));
 		}
 
 	}
